@@ -6,8 +6,6 @@ import (
   "time"
 )
 
-const wordLength = 4
-
 const letterBytes = "abcdefghijklmnopqrstuvwxyz"
 func randString(length int) string {
   result := make([]byte, length)
@@ -19,10 +17,10 @@ func randString(length int) string {
   return string(result)
 }
 
-func printStats(guesses int, totalTime float64) {
-  fmt.Printf("In %d guesses.\n", guesses)
-  fmt.Printf("Total time: %.2f sseconds\n", totalTime / float64(1000000000))
-  fmt.Printf("%.0fns per guess.\n\n", totalTime / float64(guesses))
+func printStats(monkey int, guesses int, totalTime time.Duration) {
+  fmt.Printf("Monkey #%d: In %d guesses.\n", monkey, guesses)
+  fmt.Printf("Total time: %.2f sseconds\n", totalTime.Seconds())
+  fmt.Printf("%dns per guess.\n\n", totalTime.Nanoseconds() / int64(guesses))
 }
 
 func monkey(words <-chan string, result chan<- int) {
@@ -73,16 +71,16 @@ func main() {
     select {
     case guesses := <- result_channels[0]:
       totalTime := time.Since(startTime)
-      printStats(guesses, float64(totalTime))
+      printStats(0, guesses, totalTime)
     case guesses := <- result_channels[1]:
       totalTime := time.Since(startTime)
-      printStats(guesses, float64(totalTime))
+      printStats(1, guesses, totalTime)
     case guesses := <- result_channels[2]:
       totalTime := time.Since(startTime)
-      printStats(guesses, float64(totalTime))
+      printStats(2, guesses, totalTime)
     case guesses := <- result_channels[3]:
       totalTime := time.Since(startTime)
-      printStats(guesses, float64(totalTime))
+      printStats(3, guesses, totalTime)
     }
   }
 }
